@@ -1,0 +1,31 @@
+{
+  "name": "iskierka-language",
+  "displayName": "Iskierka Language",
+  "description": "Syntax highlighting for Iskierka",
+  "version": "0.0.5",
+  "publisher": "local",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "main": "./extension.js",
+  "activationEvents": [
+    "onLanguage:iskierka"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "iskierka",
+        "aliases": [
+          "Iskierka",
+          "iskierka"
+        ],
+        "extensions": [
+          ".iski"
+        ]
+      }
+    ]
+  }
+}
