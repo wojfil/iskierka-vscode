@@ -34,10 +34,45 @@ function setColors() {
     );
 }
 
-// replicate the exact trim() function from Iskierka
-function iskierkaTrim(value) {
-    return value.replace(/^[ \t-\r]+|[ \t-\r]+$/g, '');
+
+// This is the exact same function taken from the Iskierka parser
+function isSpace(ch)
+{
+    return ch == ' ' || (ch >= '\t' && ch <= '\r');
 }
+
+// Do NOT replace it with ".trimStart()"
+function leftTrim(value) {
+    for (let i = 0; i < value.length; i++) {
+        if (!isSpace(value[i])) {
+            if (i !== 0) {
+                value = value.substring(i);
+            }
+
+            return value;
+        }
+    }
+
+    return "";
+}
+
+// Do NOT replace it with ".trimEnd()"
+function rightTrim(value) {
+    const end = value.length - 1;
+
+    for (let i = end; i >= 0; i--) {
+        if (!isSpace(value[i])) {
+            if (i === end) {
+                return value;
+            }
+
+            return value.substring(0, i + 1);
+        }
+    }
+
+    return "";
+}
+
 
 function activate(context) {
     setColors();
@@ -59,20 +94,18 @@ function activate(context) {
         const linesNothing = [];
 
         for (let i = 0; i < document.lineCount; i++) {
-            const line = document.lineAt(i).text;
-            const trimmed = iskierkaTrim(line);
+            const line = rightTrim(document.lineAt(i).text);
 
-            if (trimmed.startsWith("#") && ! trimmed.startsWith("##")) {
+            if (line.startsWith("#") && ! line.startsWith("##")) {
                 linesRule.push(new vscode.Range(i, 0, i, line.length));
 
                 if (i + 1 < document.lineCount) {
-                    const nextLine = document.lineAt(i + 1).text;
-                    const nextLineTrim = iskierkaTrim(nextLine);
+                    const nextLine = rightTrim(document.lineAt(i + 1).text);
 
-                    if (nextLineTrim !== "") {
+                    if (nextLine !== "") {
                         i++;
 
-                        if (nextLineTrim === "__nothing") {
+                        if (leftTrim(nextLine) === "__nothing") {
                             linesNothing.push(new vscode.Range(i, 0, i, nextLine.length));
                         }
                         else {
@@ -80,13 +113,15 @@ function activate(context) {
                         }
                         
                         if (i + 1 < document.lineCount) {
-                            const lineAfterNext = document.lineAt(i + 1).text;
-                            const lineAfterNextTrim = iskierkaTrim(lineAfterNext);
+                            const lineAfterNext = rightTrim(document.lineAt(i + 1).text);
 
-                            if (lineAfterNextTrim !== "") {
+                            if (lineAfterNext === "") {
+
+                            }
+                            else {
                                 i++;
 
-                                if (lineAfterNextTrim === "__nothing") {
+                                if (leftTrim(lineAfterNext) === "__nothing") {
                                     linesNothing.push(new vscode.Range(i, 0, i, lineAfterNext.length));
                                 }
                                 else {
