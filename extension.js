@@ -111,22 +111,21 @@ function activate(context) {
                         else {
                             linesInput.push(new vscode.Range(i, 0, i, nextLine.length));
                         }
-                        
-                        if (i + 1 < document.lineCount) {
+
+                        while (i + 1 < document.lineCount) {
                             const lineAfterNext = rightTrim(document.lineAt(i + 1).text);
 
                             if (lineAfterNext === "") {
+                                break;
+                            }
+                            
+                            i++;
 
+                            if (leftTrim(lineAfterNext) === "__nothing") {
+                                linesNothing.push(new vscode.Range(i, 0, i, lineAfterNext.length));
                             }
                             else {
-                                i++;
-
-                                if (leftTrim(lineAfterNext) === "__nothing") {
-                                    linesNothing.push(new vscode.Range(i, 0, i, lineAfterNext.length));
-                                }
-                                else {
-                                    linesOutput.push(new vscode.Range(i, 0, i, lineAfterNext.length));
-                                }
+                                linesOutput.push(new vscode.Range(i, 0, i, lineAfterNext.length));
                             }
                         }
                     }
