@@ -2,7 +2,7 @@
   "name": "iskierka-language",
   "displayName": "Iskierka Language",
   "description": "Syntax highlighting for Iskierka",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "publisher": "wojfil",
   "engines": {
     "vscode": "^1.80.0"
